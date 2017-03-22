@@ -1,0 +1,67 @@
+<html>
+<head>
+	<title>D3 Demo - Simple Transitions &amp; Loading Exernal Data</title>
+	<script src="http://d3js.org/d3.v3.min.js"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+</head>
+<body>
+
+	<div id="barchart"></div>
+
+	<script>
+	// Declare your SVG variable and connect it to the DIV in your HTML
+	// Give it a width of 240 and a height of 100
+		// Why is the width 240? 
+			// In our sample CSV, we have 11 values.
+			// Later on, we'll set each bar to have a width of 20 with a space of 2.
+			// The last bar will not have the space of 2.
+			// 10*22 + 20 = 240
+	var svg = d3.select('#barchart')
+		// CODE HERE
+		// CODE HERE
+		// CODE HERE
+
+	// Instead of loading in data from within the doc, such as...
+		// var data = [ 1, 2, 3, 4, 5, 4, 3, 4, 3, 2, 1 ];
+	// ...let's try loading in the data from the included CSV using d3.csv
+
+	d3.csv("D3Sample.csv", function(error, data) {
+
+		// Use forEach to iterate over the data.
+		// Our sample CSV has numerical values, so you'll need to use the Unary Plus operator (+).
+		// Read about it here: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Arithmetic_Operators#Unary_plus
+		data.forEach(function(d) {
+			// CODE HERE
+		});
+
+		// Now let's bind that data to our SVG.
+		svg.selectAll('rect')
+			.data(data)
+			.enter()
+			.append('rect')
+				// Let's add in the following attributes:
+					// The x position of each rectangle will be based on the value's index position, with a space of 2 between each rectangle.
+					// Each rectangle will have a width of 20.
+					// The recantles will have a y position of 100.
+					// By default, the rectangles will have a height of 0 so that they will "grow in" through animation.
+				// CODE HERE
+				// CODE HERE
+				// CODE HERE
+				// CODE HERE
+			.transition()
+				// Here we will configure the attributes for our transition animation:
+					// The delay will be based on each value's index position, staggered by a multiple of 100 of the index to create a "one-by-one" effect.
+						// https://github.com/d3/d3-transition/blob/master/README.md#timing
+					// The duration will be constant and set at 200ms.
+					// The y position for each rectangle will be 100 minus the value. This will flip the chart.
+					// The height for each rectangle will set to each value.
+				// CODE HERE
+				// CODE HERE
+				// CODE HERE
+				// CODE HERE
+	
+	});
+
+	</script>
+</body>
+</html>

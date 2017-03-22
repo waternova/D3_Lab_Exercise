@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+
+<link href='http://fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
+
+<!-- Basic frame of code based on http://bl.ocks.org/d3noob/8952219 -->
+
+<style>
+
+h1{
+  font-family: 'Oswald', tahoma;
+  font-size: 20px;
+  margin-top: 50px;
+  margin-left: 100px;
+  margin-bottom: 3px;
+}
+
+h5{
+  font-family: 'Oswald', tahoma;
+  font-size: 15px;
+  margin-top: 2px;
+  margin-left: 100px;
+  display: inline-block;
+}
+
+
+.barrect {
+  fill: white;
+  stroke: gray;
+  stroke-width: 0.5;
+  stroke-opacity:0.5;
+}
+
+
+.bartext {
+  fill: #000;
+  font-weight: 200%;
+  font-size : .9em;
+  font-family: 'Oswald', tahoma;
+}
+
+.counter {
+  fill: #B2B2B2;
+  font-weight: 200%;
+  font-size : 2.3em;
+  font-family: 'Oswald', tahoma;
+}
+
+.axis {
+  font: 10px sans-serif;
+  display: none;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+  display: none;
+}
+
+.x.axis path {
+  display: none;
+}
+
+/*started as a column instead of row, hence name, but this is a container for mouseover pills*/
+#slide_col{
+  width: 885px;
+  margin-left: 100px;
+  margin-top: 10px;
+  margin-bottom: 50px;
+}
+
+/*individual pills containing year*/
+.year{
+  display: inline-block;
+  width:45px;
+  text-align: center;
+  font-family: 'Oswald', tahoma;
+  font-size: 11px;
+  padding-top: 7px;
+  padding-bottom: 7px;
+  background-color: #F5FAFF;
+  cursor:pointer;
+}
+
+.active{
+  background-color: white;
+}
+
+/*changes color of pills on hover*/
+/*div.year:hover{
+  background-color: white;
+}*/
+
+button{
+  display: inline-block;
+  font-family: 'Oswald', tahoma;
+  cursor: pointer;
+  margin: 1px;
+  border-radius: 2px;
+  text-decoration: none;
+  padding: 5px;
+  font-size: 15px;
+  background-color: #FFF;
+  border: 1px solid black;
+}
+
+button:hover{
+  background-color: #5d88f4;
+}
+
+
+
+</style>
+</head>
+<body>
+<h1>College Rankings through the Years</h1>
+<h5>Move your cursor over the years to see rankings.</h5>
+<!-- These are the buttons that you see on the screen with different years. When your
+mouse is on these buttons or when you focus on the button with the help of a key board (via tabs)
+the `updateData` function is called using different parameters for each button.-->
+<div id="slide_col">
+  <button type="button" id="ninety" onmouseover="updateData(0)" onfocus="updateData(0)">1990</button>
+  <button type="button" id="ninetyone" onmouseover="updateData(1)" onfocus="updateData(1)">1991</button>
+  <button type="button" id="ninetytwo" onmouseover="updateData(2)" onfocus="updateData(2)">1992</button>
+  <button type="button" id="ninetythree" onmouseover="updateData(3)" onfocus="updateData(3)">1993</button>
+  <button type="button" id="ninetyfour" onmouseover="updateData(4)" onfocus="updateData(4)">1994</button>
+  <button type="button" id="ninetyfive" onmouseover="updateData(5)" onfocus="updateData(5)">1995</button>
+  <button type="button" id="ninetysix" onmouseover="updateData(6)" onfocus="updateData(6)">1996</button>
+  <button type="button" id="ninetyseven" onmouseover="updateData(7)" onfocus="updateData(7)">1997</button>
+  <button type="button" id="ninetyeight" onmouseover="updateData(8)" onfocus="updateData(8)">1998</button>
+  <button type="button" id="ninetynine" onmouseover="updateData(9)" onfocus="updateData(9)">1999</button>
+  <button type="button" id="zerozero" onmouseover="updateData(10)" onfocus="updateData(10)">2000</button>
+  <button type="button" id="zeroone" onmouseover="updateData(11)" onfocus="updateData(11)">2001</button>
+  <button type="button" id="zerotwo" onmouseover="updateData(12)" onfocus="updateData(12)">2002</button>
+  <button type="button" id="zerothree" onmouseover="updateData(13)" onfocus="updateData(13)">2003</button>
+  <button type="button" id="zerofour" onmouseover="updateData(14)" onfocus="updateData(14)">2004</button>
+  <button type="button" id="zerofive" onmouseover="updateData(15)" onfocus="updateData(15)">2005</button>
+  <button type="button" id="zerosix" onmouseover="updateData(16)" onfocus="updateData(16)">2006</button>
+  <button type="button" id="zeroseven" onmouseover="updateData(17)" onfocus="updateData(17)">2007</button>
+</div>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+
+
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+
+// Declares different variables that would be used later to set the size of
+// different components of our visualization. Used to establish svg.
+var margin = {top: 20, right: 20, bottom: 30, left: 100},
+    width = 1000 - margin.left - margin.right,
+    height = 570 - margin.top - margin.bottom;
+
+// Create the scale for x axis.
+// Reading : http://d3-wiki.readthedocs.io/zh_CN/master/Ordinal-Scales/#ordinal_rangeRoundBands
+var x = d3.scale.ordinal()
+    .rangeRoundBands([0, width], .1);
+
+// Create the scale for y axis.
+// Sets the range for the scale.
+var y = d3.scale.linear()
+    .range([0, height]);
+
+// Create the x axis.
+// Sets the scale.
+// Sets the orientation for the axis.
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+
+// Create the y axis.
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left")
+    .ticks(13);
+
+// creates svg frame, appends it to the body and sets its location
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+//imports data from .csv
+d3.csv("urankings.csv", function(error, data) {
+  x.domain(data.map(function(d) { return d.School; }));
+  y.domain([1, 13]);
+
+//sets up gradient bars in background
+  svg.selectAll(".bgroundbar")
+      .attr("class", "bgroundbar")
+      .data(data)
+      .enter()
+      .append("rect")
+      .attr("width", width)
+      .attr("height", 38)
+      .attr("fill", "gray")
+      .attr("fill-opacity", function(d) { return (0.1/+d.ninety)})
+      .attr("y", function(d) { return y(+d.ninety)-20; })
+
+
+//y axis.
+  svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em");
+
+//rectangle behind text
+  svg.selectAll(".barrect")
+      .data(data)
+      .enter()
+      .append("rect")
+      .attr("class", "barrect")
+      .attr("y", function(d) { return y(+d.ninety) - 20;
+      })
+      .attr("x", function(d) {
+          return x(d.School)
+      })
+      .attr("width", x.rangeBand())
+      .attr("height", 38);
+
+//name of college and its rank
+  svg.selectAll(".bartext")
+      .data(data)
+      .enter()
+      .append("text")
+      .attr("class", "bartext")
+      .attr("y", function(d) { return y(+d.ninety) + 5;
+      })
+      .attr("x", function(d) {
+          return x(d.School) + 12;
+      })
+      .text( function(d){
+        return d.School + ": " + String(d.ninety);
+      });
+
+  svg.selectAll(".counter")
+      .data(data)
+      .enter()
+      .append("text")
+      .transition()
+      .attr("class", "counter")
+      .attr("x", width-80)
+      .attr("y", 15)
+      .text(yrnum[0]);
+
+});
+
+
+// array variable containing names of columns in csv doc
+var yr = ["ninety","ninetyone","ninetytwo","ninetythree","ninetyfour","ninetyfive","ninetysix","ninetyseven","ninetyeight","ninetynine","zerozero","zeroone","zerotwo","zerothree","zerofour","zerofive","zerosix","zeroseven"]
+
+var yrnum = ["1990","1991","1992","1993","1994","1995","1996","1997","1998","1999","2000","2001","2002","2003","2004","2005","2006","2007"]
+
+//function to move across columns of data --
+//framework from http://bl.ocks.org/d3noob/7030f35b72de721622b8
+
+      function updateData(n) {
+        // console.log(n);
+
+        d3.csv("urankings.csv", function(error, data) {
+            x.domain(data.map(function(d) { return d.School; }));
+            y.domain([1, 13]);
+
+          svg.selectAll(".barrect")
+            .data(data)
+            .transition() //animates changes
+            .duration(700) // speed of animation
+            .attr("y", function(d) { console.log(yr[n]); return y(+d[yr[n]]) - 20;
+            })
+            .attr("x", function(d) {
+                return x(d.School)
+            })
+            .attr("width", x.rangeBand())
+            .attr("height", 38);
+
+        svg.selectAll(".bartext")
+            .data(data)
+            .transition() //switches number
+            .duration(700)
+            .attr("y", function(d) { console.log(+d[yr[n]]); return y(+d[yr[n]]) + 5;
+            })
+            .attr("x", function(d) {
+                return x(d.School) + 12;
+            })
+            .text( function(d){
+              return d.School + ": " + d[yr[n]];
+            });
+
+        svg.selectAll(".counter")
+            .data(data)
+            .transition()
+            .attr("class", "counter")
+            .attr("x", width-80)
+            .attr("y", 15)
+            .text(yrnum[n]);
+        });
+      }
+
+
+
+</script>
+</body>
+</html>
