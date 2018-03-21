@@ -9,6 +9,9 @@ For both of these exercises you will need to run a python local server. You will
 1. Download the code from this repository.
 2. In the command line, navigate to the folder that contains this repository.
 3. Depending on which exercise you are working on, navigate to either the Basic or the Advanced Exercise folder.
+   ```
+   cd D3BasicExercise
+   ```
 4. Type the command below for whichever version of Python you are running to start a local server:
    ```
    python -m SimpleHTTPServer (for Python 2)
@@ -19,11 +22,11 @@ For both of these exercises you will need to run a python local server. You will
 
 Once your server is up, start with the exercises in `app.js`. Don't forget to use your browser developer tools for debugging! 
 
-**Note : After making changes to your file, if they do not reflect on your browser: do a hard refresh by Shift+click on the refresh button.**
+**Note : After making changes to your file, if they do not reflect on your browser: do a hard refresh with Shift+click on the refresh button.**
 
 ## D3 Basic Exercise (start with this)
 
-1. Open the `index.html` file and follow along with the comments in `app.js` to add the missing code and get the visualization working.
+1. Open the `index.html` and `app.js` files and follow along with the comments in `app.js` to add the missing code and get the visualization working.
 2. As you go through, try to figure out what is going on with the code. Ask the TAs if you need help. 
 3. When you are done (or if you are really stuck!) look at the `app_solution.js` file.
 4. If you get the basic visualization working, you can make your own modifications (add animations and interactivity, change colors, etc.) or move on to the advanced exercise below.
