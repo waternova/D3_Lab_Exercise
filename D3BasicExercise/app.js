@@ -1,7 +1,7 @@
 'use strict';
 $(function() {
   // Declare your chart variable and connect it to the #barchart in your HTML
-  // Give it a width of 200 and a height of 240
+  // It will have a width of 200 and a height of 240
     // Why is the height 240? 
       // In our sample CSV, we have 11 values.
       // Later on, we'll set each bar to have a height of 20 with a space of 2.
@@ -9,9 +9,6 @@ $(function() {
       // 10*22 + 20 = 240
     // It is translated 40 pixels down to leave room for axis labels
   var chart = d3.select('#barchart').attr('transform', 'translate(0,40)')
-  // CODE HERE
-  // CODE HERE
-  // CODE HERE
 
   // Set up an xScale (scaleLinear) with a domain from 0 to 100 and a range from 0 to 200
     // CODE HERE
@@ -43,7 +40,7 @@ $(function() {
         // Each rectangle will have a height of 20.
         // The rectangles will have an x position of 0.
         // At the beginning, the rectangles will have a width of 0 so that they will "grow in" through animation.
-        // but for now, set their width to xScale(parseFloat(d.population)) so that you can see the chart.
+        // but for now, set their width to function(d){xScale(parseFloat(d.population))} so that you can see the chart.
       // CODE HERE
       // CODE HERE
       // CODE HERE
